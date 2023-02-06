@@ -27,10 +27,6 @@ const getEntryText = (dayOfYear: number) => {
 	const entryFound = entries.find((entry)=> (entry.data.dayOfYear === dayOfYear));
 	return entryFound ? entryFound.body : '';
 }
-// const dayNotes = [];
-// for (let i = 0; i < 7; i += 1) {
-// 	dayNotes.push (getEntry(dayStart + i));
-// }
 
 const row1 = `11%`;
 const row1Bottom = `62%`;
