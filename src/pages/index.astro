@@ -1,0 +1,84 @@
+---
+import Layout from '../layouts/Layout.astro';
+import WeekAtAGlance from '../components/Week-at-a-Glance.astro';
+
+type PI = {
+	img: string;
+	label: string;
+	dayStart: number;
+};
+
+const pageImages: PI[] = [
+	{
+		img: "img/Week1.jpg",
+		label: "The first week of Motoshi's trip to Japan",
+		dayStart: 83,
+	},
+	{
+		img: "img/Week2.jpg",
+		label: "",
+		dayStart: 90
+	},
+	{
+		img: "img/Week3.jpg",
+		label: "",
+		dayStart: 97
+	},
+	{
+		img: "img/Week4.jpg",
+		label: "",
+		dayStart: 114
+	},
+	{
+		img: "img/Week5.jpg",
+		label: "",
+		dayStart: 121
+	},
+	{
+		img: "img/Week6.jpg",
+		label: "",
+		dayStart: 128
+	},
+	{
+		img: "img/Week7.jpg",
+		label: "",
+		dayStart: 135
+	},
+];
+---
+
+<Layout title="Welcome to Astro.">
+	<main>
+		<h1>Motoshi Meets Shoko</h1>
+		<ul role="list" id="day-planner-pages">
+			{pageImages.map(pi => (
+				<WeekAtAGlance img={pi.img} alt={pi.label} dayStart={pi.dayStart} />
+			))}
+		</ul>
+	</main>
+</Layout>
+
+<style lang="scss">
+	main {
+		margin: auto;
+		padding: 1.5rem;
+	}
+	h1 {
+		font-size: 3rem;
+		text-align: center;
+		font-weight: 800;
+		margin: 0;
+	}
+
+	.text-gradient {
+		background-image: var(--accent-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 400%;
+		background-position: 0%;
+	}
+
+	#day-planner-pages {
+		list-style: none;
+	}
+</style>

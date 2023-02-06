@@ -1,0 +1,137 @@
+---
+import { getCollection } from 'astro:content';
+import { debug } from 'astro/dist/core/logger/core';
+export interface Props {
+	img: string;
+	alt: string;
+	dayStart: number;
+}
+
+const { img, alt, dayStart } = Astro.props;
+
+//const entries = await Astro.glob('../content/entries/*.md');
+const entries = await getCollection('entries', ({data}) => {
+	return data.dayOfYear >= dayStart && data.dayOfYear < dayStart + 7;
+});
+
+const dayOfWeek = [
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday",
+	"Sunday"
+];
+const getEntryText = (dayOfYear: number) => {
+	const entryFound = entries.find((entry)=> (entry.data.dayOfYear === dayOfYear));
+	return entryFound ? entryFound.body : '';
+}
+// const dayNotes = [];
+// for (let i = 0; i < 7; i += 1) {
+// 	dayNotes.push (getEntry(dayStart + i));
+// }
+
+const row1 = `11%`;
+const row1Bottom = `62%`;
+const row2 = `40%`;
+const row2Bottom = `35%`;
+const row3 = `67%`;
+const row3Bottom = `3%`;
+const col1Left = `10%`;
+const col1Right = `52%`;
+const col2Left = `52%`;
+const col2Right = `9%`;
+const day6Right = `29%`;
+const day7Left = `71%`;
+---
+
+<li class="list-item">
+	<img src={img} alt={alt} />
+	{
+		dayOfWeek.map((day, i) => (
+			<div class="date-text">
+				{ getEntryText( dayStart + i)}
+			</div>
+		))
+	}
+</li>
+
+<style lang="scss"
+	define:vars={{
+		row1, row1Bottom, 
+		row2, row2Bottom, 
+		row3, row3Bottom, 
+		col1Left, col1Right, 
+		col2Left, col2Right,
+		day6Right, day7Left
+	}}
+>
+	.list-item {
+		display:block;
+		position: relative;
+		img {
+			max-width: 100%;
+		}
+		div {
+			padding: 0.25em;
+			font-size: 1em;
+			background-color: white;
+			opacity: 0;
+			transition: 0.4s ease-out;
+			&:hover {
+				opacity: 0.9;
+			}
+		}
+		div:nth-of-type(1) {
+			position: absolute;
+			top: var(--row1);
+			left: var(--col1Left);
+			bottom: var(--row1Bottom);
+			right: var(--col1Right);
+		}
+		div:nth-of-type(2) {
+			position: absolute;
+			top: var(--row2);
+			left: var(--col1Left);
+			bottom: var(--row2Bottom);
+			right: var(--col1Right);
+		}
+		div:nth-of-type(3) {
+			position: absolute;
+			top: var(--row3);
+			left: var(--col1Left);
+			bottom: var(--row3Bottom);
+			right: var(--col1Right);
+		}
+		div:nth-of-type(4) {
+			position: absolute;
+			top: var(--row1);
+			left: var(--col2Left);
+			bottom: var(--row1Bottom);
+			right: var(--col2Right);
+		}
+		div:nth-of-type(5) {
+			position: absolute;
+			top: var(--row2);
+			left: var(--col2Left);
+			bottom: var(--row2Bottom);
+			right: var(--col2Right);
+		}
+		div:nth-of-type(6) {
+			position: absolute;
+			top: var(--row3);
+			left: var(--col2Left);
+			bottom: var(--row3Bottom);
+			right: var(--day6Right);
+		}
+		div:nth-of-type(7) {
+			position: absolute;
+			top: var(--row3);
+			left: var(--day7Left);
+			bottom: var(--row3Bottom);
+			right: var(--col2Right);
+		}
+	}
+
+</style>
