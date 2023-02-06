@@ -23,10 +23,20 @@ const dayOfWeek = [
 	"Saturday",
 	"Sunday"
 ];
+
 const getEntryText = (dayOfYear: number) => {
 	const entryFound = entries.find((entry)=> (entry.data.dayOfYear === dayOfYear));
 	return entryFound ? entryFound.body : '';
 }
+
+// const getEntryHtml = async (dayOfYear: number) => {
+// 	const entryFound = entries.find((entry)=> (entry.data.dayOfYear === dayOfYear));
+// 	if (entryFound) {
+// 		const { Content } = await entryFound.render();
+// 		return (<Content />);
+// 	}
+// 	return (<div />);
+// }
 
 const row1 = `11%`;
 const row1Bottom = `62%`;
@@ -47,7 +57,10 @@ const day7Left = `71%`;
 	{
 		dayOfWeek.map((day, i) => (
 			<div class="date-text">
-				{ getEntryText( dayStart + i)}
+				{
+					// getEntryHtml(dayStart + i)
+					getEntryText(dayStart + i)
+				}
 			</div>
 		))
 	}
