@@ -1,6 +1,7 @@
 ---
 date: May 6, 1958
 dayOfYear: 126
+textImage: may6.jpg
 ---
  Shoko went to work this morning. Got to Bank of Tokyo and got $200 of yen and $100 Travelers' Checks. Got Transister radio, speaker, obi and 135mm Nikkor lens and went home.
  Shoko came home around 2:00. Packed and went to airport.

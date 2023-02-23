@@ -1,6 +1,7 @@
 ---
 date: April 16, 1958
 dayOfYear: 106
+textImage: april16.jpg
 ---
 
 Wedding

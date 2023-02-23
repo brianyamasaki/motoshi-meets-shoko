@@ -1,6 +1,7 @@
 ---
 date: April 29, 1958
 dayOfYear: 119
+textImage: april29.jpg
 ---
 Shoko was busy laundering all morning. Afternoon went to barber shop and Kinoshita.
 Only children were there. 

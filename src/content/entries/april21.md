@@ -1,6 +1,7 @@
 ---
 date: April 21, 1958
 dayOfYear: 111
+textImage: april21.jpg
 ---
 Rainy.
 Got up late as ever. 

@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import WeekAtAGlance from '../components/Week-at-a-Glance.astro';
+import Planner from '../components/Planner.astro';
 
 type PI = {
 	img: string;
@@ -50,11 +50,7 @@ const pageImages: PI[] = [
 <Layout title="Motoshi Meets Shoko">
 	<main>
 		<h1>Motoshi Meets Shoko</h1>
-		<ul role="list" id="day-planner-pages">
-			{pageImages.map(pi => (
-				<WeekAtAGlance img={pi.img} alt={pi.label} dayStart={pi.dayStart} />
-			))}
-		</ul>
+		<Planner />
 	</main>
 </Layout>
 

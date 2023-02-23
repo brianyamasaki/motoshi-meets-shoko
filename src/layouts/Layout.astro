@@ -27,7 +27,9 @@ const { title } = Astro.props;
 	}
 	html {
 		font-family: system-ui, sans-serif;
-		background-color: #e7dbcc;
+		backdrop-filter: blur(10px);
+		background: url(/img/hardwood.jpg) center center no-repeat #e7dbcc;
+		background-size: cover;
 	}
 	code {
 		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,

@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { WeekInfo } from './includes.js';
+	import { cdayFirstMonday }	from './includes';
 
 	export let weeks: WeekInfo[];
 
-
+	
 	const cweeks = 7;
 	// constants for percentages within the image where the days are located
 	const xImgHalf = 52;
@@ -14,6 +15,8 @@
 
 	let iweek = 0;
 	let transcription = '';
+	let entryImage = '';
+	let showModal = false;
 	const nextWeek = () => {
 		iweek = Math.min(iweek + 1, cweeks - 1);
 	}
@@ -58,9 +61,11 @@
 			const entry = entries.find((entryT) => (entryT.dayOfYear === iday));
 			if (entry) {
 				transcription = entry.text;
+				entryImage = `/img/days/${entry.textImg}`;
 				return;
 			}
 			transcription = '';
+			entryImage = '';
 		}
 
 	}
@@ -71,6 +76,7 @@
 		<button on:click={prevWeek} disabled={iweek === 0? true : false}>
 			Previous Week
 		</button>
+		<span>Click or Tap on date for enlargement</span>
 		<button on:click={nextWeek} disabled={iweek === cweeks - 1 ? true : false}>
 			Next Week
 		</button>	
@@ -85,8 +91,9 @@
 					on:click={(event) => {
 						const xPct = (event.offsetX / imgEl.clientWidth) * 100;
 						const yPct = (event.offsetY / imgEl.clientHeight) * 100;
-						const iday = idayClicked(xPct, yPct) + (iweek * 7) + 83;
+						const iday = idayClicked(xPct, yPct) + (iweek * 7) + cdayFirstMonday;
 						findEntry(iday);
+						if (transcription) showModal = true;
 					}} 
 					on:keypress={handleKeypress} 
 				/>
@@ -96,27 +103,73 @@
 			{/if}
 		{/each}
 	</ul>
-	<p>{transcription}</p>
+	{#if showModal }
+	<div id="modal" on:click={() => (showModal = !showModal)}>
+		<div>
+			<img src={`${entryImage}`} alt="">
+		</div>
+		<div>
+			<p>{transcription}</p>
+			<small>Click or Tap to dismiss</small>
+		</div>
+	</div>
+	{/if}
 </div>
 
 <style>
+	.container {
+		position:relative;
+	}
 	#buttonBar {
 		display:flex;
 		justify-content: space-between;
 	}
+	button {
+		padding: 8px;
+		border-radius: 4px;
+		color: white;
+		background: rgb(85, 59, 32);
+	}
 	ul {
 		list-style: none;
 		padding: 0;
+		margin:.25em 0;
 	}
 	li {
 		display:block;
 		position:relative;
-		background: url('/img/leather-pad.jpg') right bottom no-repeat;
+		box-shadow: 5px 4px 4px black;
+		background: url('/img/leather-pad.jpg') right bottom repeat-y;
+		background-size:cover;
 		text-align: center;
 		height: auto;
 	}
 	img {
 		max-width: 100%;
 	}
-	
+	#modal {
+		position: absolute;
+		top: 2.5em;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		background-color: rgba(255, 255, 255, 0.7);
+		padding: 1em;
+	}
+
+	#modal img {
+		max-height: 25em;
+	}
+	#modal p {
+		z-index: 10;
+		font-family: Literata, Georgia, 'Times New Roman', Times, serif;
+		text-align: center;
+		font-size: 1.5em;
+		padding: 1em;
+		margin: 0;
+	}
+	#modal small {
+		display: block;
+		text-align: center;
+	}
 </style>

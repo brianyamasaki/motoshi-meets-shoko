@@ -1,6 +1,7 @@
 ---
 date: April 25, 1958
 dayOfYear: 115
+textImage: april25.jpg
 ---
 Cloudy.
 Went to Gete Buro this morning in a fascinating bath. Bought few souvenirs. 
