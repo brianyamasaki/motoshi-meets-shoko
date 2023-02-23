@@ -73,6 +73,13 @@
 	}
 </script>
 
+<svelte:head>
+	// starts preloading images as soon as page is loaded
+  {#each weeks as week}
+    <link rel="preload" as="image" href={week.strWeekImg} />
+  {/each}
+</svelte:head>
+
 <div class="container">
 	<div id="buttonBar">
 		<button on:click={prevWeek} disabled={iweek === 0? true : false}>
@@ -121,6 +128,7 @@
 <style>
 	.container {
 		position:relative;
+		padding:3em;
 	}
 	#buttonBar {
 		display:flex;
@@ -132,6 +140,11 @@
 		color: white;
 		background: rgb(85, 59, 32);
 	}
+	button:disabled {
+		background: rgb(146, 124, 77);
+		cursor:not-allowed;
+	}
+
 	ul {
 		list-style: none;
 		padding: 0;
@@ -157,6 +170,7 @@
 		right: 0;
 		background-color: rgba(255, 255, 255, 0.7);
 		padding: 1em;
+		text-align: center;
 	}
 
 	#modal img {
