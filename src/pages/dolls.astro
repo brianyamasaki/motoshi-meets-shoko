@@ -1,0 +1,46 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Kokeshi dolls">
+	<main>
+		<h1>
+			Kokeshi Dolls
+		</h1>
+		<p>
+			Wooden dolls with likenesses of Motoshi and Shoko were used as reception party favors. 
+			They didn't have a reception in Japan, but did have a reception when Shoko moved to America, months later. </p>
+		<div class="flex">
+			<img src="/motoshi.svg" alt="Motoshi doll" height="320" />
+			<img src="/shoko.svg" alt="Shoko doll" height="320" />
+		</div>
+		<p><a href="/">Back to the home page</a></p>
+	</main>
+</Layout>
+
+<style lang="scss">
+	html {
+		background:rgb(255, 239, 194);
+	}
+	main {
+		margin: auto;
+		padding: calc(1vw + 0vmin);
+	}
+	h1 {
+		font-family: Literata, Georgia, 'Times New Roman', Times, serif;
+		font-size: calc(1vw + 1vh + 3vmin);
+		text-align: center;
+		font-weight: 800;
+		margin: 0;
+	}
+	p {
+		font-family: Literata, Georgia, 'Times New Roman', Times, serif;
+		text-align: center;
+		margin: 0.5em calc(1vw + 1vh + 3vmin) 1.5em;
+	}
+
+	.flex {
+		display:flex;
+		justify-content: space-around;
+	}
+</style>

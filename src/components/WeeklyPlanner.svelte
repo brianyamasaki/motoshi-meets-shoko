@@ -128,11 +128,16 @@
 <style>
 	.container {
 		position:relative;
-		padding:3em;
+		padding:calc(1vw + 1vh + .3vmin);
 	}
 	#buttonBar {
 		display:flex;
 		justify-content: space-between;
+	}
+
+	#buttonBar span {
+		display:block;
+		text-align: center;
 	}
 	button {
 		padding: 8px;

@@ -1,55 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Planner from '../components/Planner.astro';
-
-type PI = {
-	img: string;
-	label: string;
-	dayStart: number;
-};
-
-const pageImages: PI[] = [
-	{
-		img: "img/week1.png",
-		label: "The first week of Motoshi's trip to Japan",
-		dayStart: 83,
-	},
-	{
-		img: "img/week2.png",
-		label: "",
-		dayStart: 90
-	},
-	{
-		img: "img/week3.png",
-		label: "",
-		dayStart: 97
-	},
-	{
-		img: "img/week4.png",
-		label: "",
-		dayStart: 104
-	},
-	{
-		img: "img/week5.png",
-		label: "",
-		dayStart: 111
-	},
-	{
-		img: "img/week6.png",
-		label: "",
-		dayStart: 118
-	},
-	{
-		img: "img/week7.png",
-		label: "",
-		dayStart: 125
-	},
-];
 ---
 
 <Layout title="Motoshi Meets Shoko">
 	<main>
-		<h1>Motoshi Meets Shoko</h1>
+		<h1>
+			<a href="/dolls"><img src="/motoshi.svg" alt="Motoshi doll" height="64" /></a>
+			Motoshi Meets Shoko
+			<a href="/dolls"><img src="/shoko.svg" alt="Shoko doll" height="64" /></a>
+		</h1>
 		<Planner />
 	</main>
 </Layout>
@@ -57,11 +17,11 @@ const pageImages: PI[] = [
 <style lang="scss">
 	main {
 		margin: auto;
-		padding: 1.5rem;
+		padding: calc(1vw + 0vmin);
 	}
 	h1 {
 		font-family: Literata, Georgia, 'Times New Roman', Times, serif;
-		font-size: 3rem;
+		font-size: calc(1vw + 1vh + 3vmin);
 		text-align: center;
 		font-weight: 800;
 		margin: 0;
