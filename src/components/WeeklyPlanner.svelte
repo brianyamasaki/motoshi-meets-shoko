@@ -19,10 +19,12 @@
 	let showModal = false;
 	const nextWeek = () => {
 		iweek = Math.min(iweek + 1, cweeks - 1);
+		showModal = false;
 	}
 
 	const prevWeek = () => {
 		iweek = Math.max(0, iweek - 1);
+		showModal = false;
 	}
 	
 	const handleKeypress = (event: KeyboardEvent) => {
