@@ -1,10 +1,19 @@
 <script lang="ts">
-	import type weekInfo from './Planner.astro';
+	import type { WeekInfo } from './includes.js';
 
-	export let weeks: weekInfo[];
+	export let weeks: WeekInfo[];
+
 
 	const cweeks = 7;
+	// constants for percentages within the image where the days are located
+	const xImgHalf = 52;
+	const yDivs = [
+		40,
+		68
+	];
+
 	let iweek = 0;
+	let transcription = '';
 	const nextWeek = () => {
 		iweek = Math.min(iweek + 1, cweeks - 1);
 	}
@@ -13,10 +22,46 @@
 		iweek = Math.max(0, iweek - 1);
 	}
 	
-	const handleClick = (event) : void => {
-		alert(`${event.clientX}, ${event.clientY}`);
+	const handleKeypress = (event: KeyboardEvent) => {
+		console.log(event.key);
 	}
-	const handleKeypress = (event) => {
+	let imgEl: HTMLElement;
+
+	const iyClicked = (yPct: number): number => {
+		if (yPct < yDivs[0]) {
+			return 0;
+		} else if (yPct < yDivs[1]) {
+			return 1;
+		}
+		return 2;
+	}
+
+	const idayClicked = (xPct: number, yPct: number) : number => {
+		const iy = iyClicked(yPct);
+		if (xPct < xImgHalf) {
+			return iy;
+		} else {
+			if (iy < 2) {
+				return iy + 3;
+			} else {
+				if (xPct < 72) {
+					return iy + 3;
+				}
+				return iy + 4;
+			}
+		}
+	}
+
+	const findEntry = (iday: number) => {
+		if (weeks && weeks[iweek]) {
+			const entries = weeks[iweek].entries;
+			const entry = entries.find((entryT) => (entryT.dayOfYear === iday));
+			if (entry) {
+				transcription = entry.text;
+				return;
+			}
+			transcription = '';
+		}
 
 	}
 </script>
@@ -32,11 +77,26 @@
 	</div>
 	<ul>
 		{#each weeks as week, i}
-			<li on:click={handleClick} on:keypress={handleKeypress}>
-				<img class="{iweek === i ? "visible": ""}" src={week.strWeekImg} alt={week.strWeekAlt} />
+			{#if iweek === i}
+			<li>
+				<img bind:this={imgEl}
+					src={week.strWeekImg} 
+					alt={week.strImageAlt}
+					on:click={(event) => {
+						const xPct = (event.offsetX / imgEl.clientWidth) * 100;
+						const yPct = (event.offsetY / imgEl.clientHeight) * 100;
+						const iday = idayClicked(xPct, yPct) + (iweek * 7) + 83;
+						findEntry(iday);
+					}} 
+					on:keypress={handleKeypress} 
+				/>
 			</li>
+			{:else }
+				<li></li>
+			{/if}
 		{/each}
 	</ul>
+	<p>{transcription}</p>
 </div>
 
 <style>
@@ -48,17 +108,12 @@
 		list-style: none;
 		padding: 0;
 	}
-	li { 
+	li {
 		display:block;
 		position:relative;
 		background: url('/img/leather-pad.jpg') right bottom no-repeat;
 		text-align: center;
-	}
-	img {
-		display:none;
-	}
-	img.visible {
-		display:block;
+		height: auto;
 	}
 	img {
 		max-width: 100%;

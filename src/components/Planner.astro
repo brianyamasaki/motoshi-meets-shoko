@@ -1,31 +1,31 @@
 ---
 import { getCollection, CollectionEntry } from 'astro:content';
 import WeeklyPlanner from './WeeklyPlanner.svelte';
-
-export const cweeks = 7;
-
-export type weekInfo = {
-  cdayMonday: number;
-  strWeekImg: string;
-  strImageAlt: string;
-  collection: CollectionEntry<"entries">[] | null;
-}
+import { cweeks } from './includes';
+import type { WeekInfo } from './includes';
 
 const entries = await getCollection('entries');
 
 const cdayFirstMonday = 82;
 
-const weeks: weekInfo[] = [];
+const weeks: WeekInfo[] = [];
 
 for (let i = 0; i < cweeks;i += 1) {
-  const cdayStart = cdayFirstMonday + cweeks * 7;
+  const cdayStart = cdayFirstMonday + i * 7;
   const cdayEnd = cdayStart + 7;
+  const entriesForWeek = entries.filter((entry) => (
+      entry.data.dayOfYear >= cdayStart && entry.data.dayOfYear <= cdayEnd
+    ));
   const week = {
     cdayMonday: cdayFirstMonday + i * 7,
     strWeekImg: `/img/week${i + 1}.png`,
     strImageAlt: `Week${i + 1}`,
-    collection: entries.filter((entry) => (
-      entry.data.dayOfYear >= cdayStart && entry.data.dayOfYear < cdayEnd
+    entries: entriesForWeek.map((entry) => (
+      {
+        dayOfYear: entry.data.dayOfYear,
+        date: entry.data.date,
+        text: entry.body
+      }
     ))
   };
   weeks.push(week);
