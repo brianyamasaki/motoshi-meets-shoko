@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { WeekInfo } from './includes.js';
 	import { cdayFirstMonday }	from './includes';
+	import SvelteMarkdown from 'svelte-markdown'
 
 	export let weeks: WeekInfo[];
 
@@ -118,7 +119,7 @@
 			<img src={`${entryImage}`} alt="">
 		</div>
 		<div>
-			<p>{transcription}</p>
+			<SvelteMarkdown source={transcription} />
 			<small>Click or Tap to dismiss</small>
 		</div>
 	</div>
@@ -168,6 +169,8 @@
 		max-width: 100%;
 	}
 	#modal {
+		font-family: Literata, Georgia, 'Times New Roman', Times, serif;
+		z-index: 10;
 		position: absolute;
 		top: 2.5em;
 		left: 0;
@@ -181,13 +184,17 @@
 	#modal img {
 		max-height: 25em;
 	}
-	#modal p {
-		z-index: 10;
-		font-family: Literata, Georgia, 'Times New Roman', Times, serif;
+
+	#modal :global(h2) {
+		font-size: 2.5em;
+	}
+
+	#modal :global(p) {
 		text-align: center;
 		font-size: 1.5em;
 		padding: 1em;
-		margin: 0;
+		margin: 0 auto;
+		max-width: 60rem;
 	}
 	#modal small {
 		display: block;
