@@ -24,35 +24,63 @@
 		'frame7.png',
 	];
 
+	const getUrlWeekParams = (): number => {
+		const SearchParams = new URLSearchParams(window.location.search);
+		const value = SearchParams.get(paramString);
+		return value ? parseInt(value, 10) : 0;
+	}
+
+	const setUrlWeekParams = (i: number) => {
+		const loc = document.location;
+		const newUrl = `${loc.protocol}//${loc.host}/?${paramString}=${i.toString()}`
+		const state = {path: newUrl};
+		history.pushState(state, '', newUrl);
+	}
+
 	let iweek = 0;
 	let transcription = '';
 	let entryImage = '';
 	let relatedPhotos: PhotoInfo[] = [];
 	let showModal = false;
-	let SearchParams = new URLSearchParams('foo.com');
+	let touchList: TouchList = [];
 	onMount ( () => {
-		SearchParams = new URLSearchParams(window.location.href);
-		if (SearchParams.has(paramString)) {
-			const param = SearchParams.get(paramString) || '0';
-			iweek += parseInt(param, 10);
-		}
+
+		iweek = getUrlWeekParams();
+
 	});
 	
-
 	const nextWeek = () => {
 		iweek = Math.min(iweek + 1, cweeks - 1);
-		SearchParams.set(paramString, iweek.toString());
+		setUrlWeekParams(iweek);
 		showModal = false;
 	}
 
 	const prevWeek = () => {
 		iweek = Math.max(0, iweek - 1);
-		SearchParams.set(paramString, iweek.toString());
+		setUrlWeekParams(iweek);
 		showModal = false;
 	}
 	
 	const handleKeypress = (event: KeyboardEvent) => {
 		console.log(event.key);
+	}
+
+	const startTouch = (event: TouchEvent) => {
+		touchList = event.touches;
+	}
+
+	const endTouch = (event: TouchEvent) => {
+		if (touchList.length > 0) {
+			const dx = touchList[0].clientX - event.touches[0].clientX;
+			const dy = touchList[0].clientY - event.touches[0].clientY;
+			if (Math.abs(dy) < Math.abs(dx)) {
+				if (dx > 0) {
+					nextWeek();
+				} else {
+					prevWeek();
+				}
+			}
+		}
 	}
 	let imgEl: HTMLElement;
 
@@ -109,7 +137,7 @@
 	{/each}
 </svelte:head>
 
-<div class="container">
+<div class="container" on:touchstart={startTouch} on:touchend={endTouch}>
 	<div id="buttonBar">
 		<button on:click={prevWeek} disabled={iweek === 0? true : false}>
 			Previous Week
