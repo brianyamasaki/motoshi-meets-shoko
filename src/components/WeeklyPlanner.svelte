@@ -1,11 +1,12 @@
 <script lang="ts">
-	import type { WeekInfo } from './includes.js';
+	import { onMount } from 'svelte';
+	import type { WeekInfo, PhotoInfo } from './includes.js';
 	import { cdayFirstMonday }	from './includes';
 	import SvelteMarkdown from 'svelte-markdown'
 
 	export let weeks: WeekInfo[];
 
-	
+	const paramString = 'week';
 	const cweeks = 7;
 	// constants for percentages within the image where the days are located
 	const xImgHalf = 52;
@@ -13,18 +14,40 @@
 		40,
 		68
 	];
+	const frameImages = [
+		'frame1.png',
+		'frame2.png',
+		'frame3.png',
+		'frame4.png',
+		'frame5.png',
+		'frame6.png',
+		'frame7.png',
+	];
 
 	let iweek = 0;
 	let transcription = '';
 	let entryImage = '';
+	let relatedPhotos: PhotoInfo[] = [];
 	let showModal = false;
+	let SearchParams = new URLSearchParams('foo.com');
+	onMount ( () => {
+		SearchParams = new URLSearchParams(window.location.href);
+		if (SearchParams.has(paramString)) {
+			const param = SearchParams.get(paramString) || '0';
+			iweek += parseInt(param, 10);
+		}
+	});
+	
+
 	const nextWeek = () => {
 		iweek = Math.min(iweek + 1, cweeks - 1);
+		SearchParams.set(paramString, iweek.toString());
 		showModal = false;
 	}
 
 	const prevWeek = () => {
 		iweek = Math.max(0, iweek - 1);
+		SearchParams.set(paramString, iweek.toString());
 		showModal = false;
 	}
 	
@@ -65,10 +88,12 @@
 			if (entry) {
 				transcription = entry.text;
 				entryImage = `/img/days/${entry.textImg}`;
+				relatedPhotos = entry.relatedPhotos;
 				return;
 			}
 			transcription = '';
 			entryImage = '';
+			relatedPhotos = [];
 		}
 
 	}
@@ -79,6 +104,9 @@
   {#each weeks as week}
     <link rel="preload" as="image" href={week.strWeekImg} />
   {/each}
+	{#each frameImages as img}
+		<link rel="preload" as="image" href={`/img/flip-animation/${img}`} />
+	{/each}
 </svelte:head>
 
 <div class="container">
@@ -116,10 +144,20 @@
 	{#if showModal }
 	<div id="modal" on:click={() => (showModal = !showModal)}>
 		<div>
-			<img src={`${entryImage}`} alt="">
+			<img src={`${entryImage}`} alt="Motoshi's original handwriting">
 		</div>
 		<div>
 			<SvelteMarkdown source={transcription} />
+			{#if relatedPhotos }
+				<div>
+					{#each relatedPhotos as photoSrc}
+						<div>
+							<img src={photoSrc.imgSrc} alt={photoSrc.label} />
+							<p>{photoSrc.label}</p>
+						</div>
+					{/each}
+				</div>
+			{/if}
 			<small>Click or Tap to dismiss</small>
 		</div>
 	</div>
@@ -174,9 +212,10 @@
 		position: absolute;
 		top: 2.5em;
 		left: 0;
-		bottom: 0;
+		bottom: auto;
 		right: 0;
 		background-color: rgba(255, 255, 255, 0.7);
+		border-radius: 1em;
 		padding: 1em;
 		text-align: center;
 	}
@@ -197,6 +236,7 @@
 		max-width: 60rem;
 	}
 	#modal small {
+		margin-top: 2em;
 		display: block;
 		text-align: center;
 	}

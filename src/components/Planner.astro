@@ -24,7 +24,8 @@ for (let i = 0; i < cweeks;i += 1) {
         dayOfYear: entry.data.dayOfYear,
         date: entry.data.date,
         text: entry.body,
-        textImg: entry.data.textImage
+        textImg: entry.data.textImage,
+        relatedPhotos: entry.data.relatedPhotos || []
       }
     ))
   };

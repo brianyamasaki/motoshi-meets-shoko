@@ -3,8 +3,10 @@ date: April 16, 1958
 dayOfYear: 106
 textImage: april16.jpg
 relatedPhotos:
-  - /img/related/wedding-couple.jpg
-  - /img/related/wedding-with-family.jpg
+  - imgSrc: /img/related/wedding-couple.jpg
+    label: Motoshi and Shoko on their wedding day
+  - imgSrc: /img/related/wedding-with-family.jpg
+    label: Shoko's family included with the couple
 ---
 
 ## Wedding

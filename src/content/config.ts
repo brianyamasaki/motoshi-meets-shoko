@@ -5,7 +5,11 @@ const entryCollection = defineCollection({
   schema: z.object({
     date: z.string(),
     dayOfYear: z.number(),
-    textImage: z.string()
+    textImage: z.string(),
+    relatedPhotos: z.array(z.object({
+      imgSrc: z.string(),
+      label: z.string()
+    })).optional()
   })
  });
 // 3. Export a single `collections` object to register your collection(s)
