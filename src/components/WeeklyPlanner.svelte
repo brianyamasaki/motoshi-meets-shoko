@@ -43,10 +43,20 @@
 	let relatedPhotos: PhotoInfo[] = [];
 	let showModal = false;
 	let touchList: TouchList = [];
+
+	// gets called when the browser "back" button gets pressed
+	const popStateListener = () => {
+		iweek = getUrlWeekParams();
+	}
+
 	onMount ( () => {
 
 		iweek = getUrlWeekParams();
+		window.addEventListener('popstate', popStateListener)
 
+		return () => {
+			window.removeEventListener('popstate', popStateListener);
+		}
 	});
 	
 	const nextWeek = () => {
@@ -172,7 +182,7 @@
 	{#if showModal }
 	<div id="modal" on:click={() => (showModal = !showModal)}>
 		<div>
-			<img src={`${entryImage}`} alt="Motoshi's original handwriting">
+			<img class="handwriting" src={`${entryImage}`} alt="Motoshi's original handwriting">
 		</div>
 		<div>
 			<SvelteMarkdown source={transcription} />
@@ -247,8 +257,11 @@
 		padding: 1em;
 		text-align: center;
 	}
-
 	#modal img {
+		max-height: 50em;
+	}
+
+	#modal img.handwriting {
 		max-height: 25em;
 	}
 
