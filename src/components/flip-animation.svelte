@@ -1,5 +1,4 @@
 <script lang="ts">
-	// import { fade } from "svelte/transition";
 	const frameImages = [
 		'frame1',
 		'frame2',
@@ -10,12 +9,19 @@
 		'frame7',
 	];
 	const fileExtension = 'png';
+	export let forward:boolean;
+	console.log(forward)
 	let divEl;
 	let iframe = 0;
+	let increment = 1;
+	if (!forward) {
+		iframe = frameImages.length - 1;
+		increment = -1
+	}
 	
 	let intervalId = setInterval(() => {
-			iframe += 1;
-			if (iframe === frameImages.length) {
+			iframe += increment;
+			if (iframe === frameImages.length || iframe < 0) {
 				clearInterval(intervalId);
 				intervalId = 0;
 			}
@@ -40,6 +46,7 @@
   div {
     position:relative;
 		height: 50em;
+		border: 1px solid rgba(0,0,0,0.5);
 		img {
 			opacity: 0.5;
 			// position: absolute;

@@ -148,20 +148,14 @@
 </svelte:head>
 
 <div class="container" on:touchstart={startTouch} on:touchend={endTouch}>
-	<div id="buttonBar">
-		<button on:click={prevWeek} disabled={iweek === 0? true : false}>
-			Previous Week
-		</button>
-		<span>Click or Tap on date for enlargement</span>
-		<button on:click={nextWeek} disabled={iweek === cweeks - 1 ? true : false}>
-			Next Week
-		</button>	
+	<div class="instructions">
+		Click or Tap on date for enlargement
 	</div>
-	<ul>
 		{#each weeks as week, i}
 			{#if iweek === i}
-			<li>
-				<img bind:this={imgEl}
+				<img 
+					class="week-image"
+					bind:this={imgEl}
 					src={week.strWeekImg} 
 					alt={week.strImageAlt}
 					on:click={(event) => {
@@ -173,12 +167,10 @@
 					}} 
 					on:keypress={handleKeypress} 
 				/>
-			</li>
-			{:else }
-				<li></li>
 			{/if}
 		{/each}
-	</ul>
+	<button class="previous" on:click={prevWeek} disabled={iweek === 0? true : false}/>
+	<button class="next" on:click={nextWeek}  disabled={iweek === cweeks - 1 ? true : false}/>
 	{#if showModal }
 	<div id="modal" on:click={() => (showModal = !showModal)}>
 		<div>
@@ -206,63 +198,65 @@
 	.container {
 		position:relative;
 		padding:calc(1vw + 1vh + .3vmin);
-	}
-	#buttonBar {
-		display:flex;
-		justify-content: space-between;
-	}
-
-	#buttonBar span {
-		display:block;
-		text-align: center;
-	}
-	button {
-		padding: 8px;
-		border-radius: 4px;
-		color: white;
-		background: rgb(85, 59, 32);
-	}
-	button:disabled {
-		background: rgb(146, 124, 77);
-		cursor:not-allowed;
-	}
-
-	ul {
-		list-style: none;
-		padding: 0;
-		margin:.25em 0;
-	}
-	li {
-		display:block;
-		position:relative;
 		box-shadow: 5px 4px 4px black;
 		background: url('/img/leather-pad.jpg') right bottom repeat-y;
 		background-size:cover;
 		text-align: center;
-		height: auto;
 	}
-	img {
+	.instructions {
+		display:block;
+		text-align: center;
+		color: white; 
+	}
+	img.week-image {
 		max-width: 100%;
+	}
+	button {
+		background: rgba(255, 255, 255, 0.4) center center no-repeat;
+		background-size: contain;
+		border: none;
+		border-radius:4px;
+		position: absolute;
+		bottom: 50%;
+		width: calc(4vw + 25px);
+		height: calc(4vw + 33px);
+	}
+	button:hover {
+		background-color: rgba(255, 255, 255, 0.6);
+	}
+	button:active {
+		background-color: rgba(255, 150, 150, 0.4);
+	}
+	button.previous {
+		background-image: url('/img/prev.png');
+		left: 0;
+	}
+	button.next {
+		background-image: url('/img/next.png');
+		right: 0;
+	}
+	button.next:disabled,
+	button.previous:disabled {
+		background:none;
+		background-image:none;
 	}
 	#modal {
 		font-family: Literata, Georgia, 'Times New Roman', Times, serif;
 		z-index: 10;
 		position: absolute;
-		top: 2.5em;
+		top: 0;
 		left: 0;
 		bottom: auto;
 		right: 0;
 		background-color: rgba(255, 255, 255, 0.7);
 		border-radius: 1em;
-		padding: 1em;
+		padding: 2em;
 		text-align: center;
 	}
-	#modal img {
-		max-height: 50em;
-	}
 
-	#modal img.handwriting {
+	#modal img {
 		max-height: 25em;
+		max-width: 100%;
 	}
 
 	#modal :global(h2) {
