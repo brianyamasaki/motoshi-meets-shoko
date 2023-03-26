@@ -5,6 +5,7 @@
 	import SvelteMarkdown from 'svelte-markdown'
 
 	export let weeks: WeekInfo[];
+	const weekImgAspect = 1200 / 852;
 
 	const paramString = 'week';
 	const cweeks = 7;
@@ -43,6 +44,13 @@
 	let relatedPhotos: PhotoInfo[] = [];
 	let showModal = false;
 	let touchList: TouchList = [];
+	enum mdAnimation {
+		stopAnim = 0,
+		nextAnim,
+		prevAnim
+	};
+	let showFlipAnimation = mdAnimation.stopAnim;
+	let iframe = 0;
 
 	// gets called when the browser "back" button gets pressed
 	const popStateListener = () => {
@@ -58,17 +66,39 @@
 			window.removeEventListener('popstate', popStateListener);
 		}
 	});
+
+	const doFlipAnimation = (animType: mdAnimation) => {
+		showFlipAnimation = animType;
+		let increment: number;
+		if (animType === mdAnimation.nextAnim) {
+			iframe = 0;
+			increment = 1;
+		} else {
+			iframe = frameImages.length - 1;
+			increment = -1;
+		}
+
+		const interval = setInterval(() => {
+			iframe += increment;
+			if (iframe < 0 || iframe === frameImages.length) {
+			// if (iframe === 5) {
+				clearInterval(interval);
+			}
+		}, 80);
+	}
 	
 	const nextWeek = () => {
 		iweek = Math.min(iweek + 1, cweeks - 1);
 		setUrlWeekParams(iweek);
 		showModal = false;
+		doFlipAnimation(mdAnimation.nextAnim);
 	}
 
 	const prevWeek = () => {
 		iweek = Math.max(0, iweek - 1);
 		setUrlWeekParams(iweek);
 		showModal = false;
+		doFlipAnimation(mdAnimation.prevAnim);
 	}
 	
 	const handleKeypress = (event: KeyboardEvent) => {
@@ -147,61 +177,84 @@
 	{/each}
 </svelte:head>
 
-<div class="container" on:touchstart={startTouch} on:touchend={endTouch}>
+<div>
 	<div class="instructions">
 		Click or Tap on date for enlargement
 	</div>
-		{#each weeks as week, i}
-			{#if iweek === i}
-				<img 
-					class="week-image"
-					bind:this={imgEl}
-					src={week.strWeekImg} 
-					alt={week.strImageAlt}
-					on:click={(event) => {
-						const xPct = (event.offsetX / imgEl.clientWidth) * 100;
-						const yPct = (event.offsetY / imgEl.clientHeight) * 100;
-						const iday = idayClicked(xPct, yPct) + (iweek * 7) + cdayFirstMonday;
-						findEntry(iday);
-						if (transcription) showModal = true;
-					}} 
-					on:keypress={handleKeypress} 
-				/>
-			{/if}
-		{/each}
-	<button class="previous" on:click={prevWeek} disabled={iweek === 0? true : false}/>
-	<button class="next" on:click={nextWeek}  disabled={iweek === cweeks - 1 ? true : false}/>
-	{#if showModal }
-	<div id="modal" on:click={() => (showModal = !showModal)}>
-		<div>
-			<img class="handwriting" src={`${entryImage}`} alt="Motoshi's original handwriting">
-		</div>
-		<div>
-			<SvelteMarkdown source={transcription} />
-			{#if relatedPhotos }
+	<div class="deskpad">
+		<div class="container" on:touchstart={startTouch} on:touchend={endTouch}>
+				{#each weeks as week, i}
+					{#if iweek === i}
+						<img 
+							class="week-image"
+							bind:this={imgEl}
+							src={week.strWeekImg} 
+							alt={week.strImageAlt}
+							on:click={(event) => {
+								const xPct = (event.offsetX / imgEl.clientWidth) * 100;
+								const yPct = (event.offsetY / imgEl.clientHeight) * 100;
+								const iday = idayClicked(xPct, yPct) + (iweek * 7) + cdayFirstMonday;
+								findEntry(iday);
+								if (transcription) showModal = true;
+							}} 
+							on:keypress={handleKeypress} 
+						/>
+					{/if}
+				{/each}
+				{#if showFlipAnimation !== mdAnimation.stopAnim}
+					{#each frameImages as img, i}
+						{#if iframe === i}
+							<img 
+								class="flip-animation" 
+								src={`/img/flip-animation/${frameImages[i]}`} 
+								alt={`animation image ${i}`} 
+								style="clientLeft: {imgEl.clientLeft} clientTop: {imgEl.clientTop} clientHeight: {imgEl.clientHeight * 0.8} clientBottom: {imgEl.clientWidth}"
+							/>
+						{/if}
+				{/each}
+				{/if}
+			<button class="previous" on:click={prevWeek} disabled={iweek === 0? true : false}/>
+			<button class="next" on:click={nextWeek}  disabled={iweek === cweeks - 1 ? true : false}/>
+			{#if showModal }
+			<div id="modal" on:click={() => (showModal = !showModal)} on:keydown={() => (showModal = !showModal)}>
 				<div>
-					{#each relatedPhotos as photoSrc}
-						<div>
-							<img src={photoSrc.imgSrc} alt={photoSrc.label} />
-							<p>{photoSrc.label}</p>
-						</div>
-					{/each}
+					<img class="handwriting" src={`${entryImage}`} alt="Motoshi's original handwriting">
 				</div>
+				<div>
+					<SvelteMarkdown source={transcription} />
+					{#if relatedPhotos }
+						<div>
+							{#each relatedPhotos as photoSrc}
+								<div>
+									<img src={photoSrc.imgSrc} alt={photoSrc.label} />
+									<p>{photoSrc.label}</p>
+								</div>
+							{/each}
+						</div>
+					{/if}
+					<small>Click or Tap to dismiss</small>
+				</div>
+			</div>
 			{/if}
-			<small>Click or Tap to dismiss</small>
 		</div>
 	</div>
-	{/if}
 </div>
 
 <style>
-	.container {
-		position:relative;
-		padding:calc(1vw + 1vh + .3vmin);
+	.deskpad {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		box-shadow: 5px 4px 4px black;
 		background: url('/img/leather-pad.jpg') right bottom repeat-y;
 		background-size:cover;
 		text-align: center;
+	}
+	.container {
+		position:relative;
+		width: 80%;
+		height: 90%;
+		margin: 2em;
 	}
 	.instructions {
 		display:block;
@@ -209,7 +262,14 @@
 		color: white; 
 	}
 	img.week-image {
+		width: 100%;
+	}
+	img.flip-animation {
 		max-width: 100%;
+		position:absolute;
+		top: -6vw;
+		left:0;
+		right:0;
 	}
 	button {
 		background: rgba(255, 255, 255, 0.4) center center no-repeat;
