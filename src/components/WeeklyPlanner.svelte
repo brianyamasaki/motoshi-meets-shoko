@@ -252,10 +252,11 @@
 	}
 	.container {
 		position:relative;
-		width: 80%;
+		width: clamp(45ch, 85%, 150ch);
 		height: 90%;
 		margin: 2em;
 	}
+	
 	.instructions {
 		display:block;
 		text-align: center;
