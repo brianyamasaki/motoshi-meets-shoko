@@ -39,10 +39,13 @@
 	}
 
 	let iweek = 0;
+	let iweekNext = 0;
 	let transcription = '';
 	let entryImage = '';
 	let relatedPhotos: PhotoInfo[] = [];
 	let showModal = false;
+	const frameInterval = 80;
+	const flipAnimationTime = frameInterval * frameImages.length;
 	let touchList: TouchList = [];
 	enum mdAnimation {
 		stopAnim = 0,
@@ -81,21 +84,21 @@
 		const interval = setInterval(() => {
 			iframe += increment;
 			if (iframe < 0 || iframe === frameImages.length) {
-			// if (iframe === 5) {
 				clearInterval(interval);
+				iweek = iweekNext;
 			}
-		}, 80);
+		}, frameInterval);
 	}
 	
 	const nextWeek = () => {
-		iweek = Math.min(iweek + 1, cweeks - 1);
+		iweekNext = Math.min(iweek + 1, cweeks - 1);
 		setUrlWeekParams(iweek);
 		showModal = false;
 		doFlipAnimation(mdAnimation.nextAnim);
 	}
 
 	const prevWeek = () => {
-		iweek = Math.max(0, iweek - 1);
+		iweekNext = Math.max(0, iweek - 1);
 		setUrlWeekParams(iweek);
 		showModal = false;
 		doFlipAnimation(mdAnimation.prevAnim);
