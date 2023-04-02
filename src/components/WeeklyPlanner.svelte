@@ -108,23 +108,23 @@
 		console.log(event.key);
 	}
 
-	const startTouch = (event: TouchEvent) => {
-		touchList = event.touches;
-	}
+	// const startTouch = (event: TouchEvent) => {
+	// 	touchList = event.touches;
+	// }
 
-	const endTouch = (event: TouchEvent) => {
-		if (touchList.length > 0) {
-			const dx = touchList[0].clientX - event.touches[0].clientX;
-			const dy = touchList[0].clientY - event.touches[0].clientY;
-			if (Math.abs(dy) < Math.abs(dx)) {
-				if (dx > 0) {
-					nextWeek();
-				} else {
-					prevWeek();
-				}
-			}
-		}
-	}
+	// const endTouch = (event: TouchEvent) => {
+	// 	if (touchList.length > 0) {
+	// 		const dx = touchList[0].clientX - event.touches[0].clientX;
+	// 		const dy = touchList[0].clientY - event.touches[0].clientY;
+	// 		if (Math.abs(dy) < Math.abs(dx)) {
+	// 			if (dx > 0) {
+	// 				nextWeek();
+	// 			} else {
+	// 				prevWeek();
+	// 			}
+	// 		}
+	// 	}
+	// }
 	let imgEl: HTMLElement;
 
 	const iyClicked = (yPct: number): number => {
@@ -185,7 +185,7 @@
 		Click or Tap on date for enlargement
 	</div>
 	<div class="deskpad">
-		<div class="container" on:touchstart={startTouch} on:touchend={endTouch}>
+		<div class="container">
 				{#each weeks as week, i}
 					{#if iweek === i}
 						<img 
